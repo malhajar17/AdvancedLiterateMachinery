@@ -137,7 +137,7 @@ def main(document_id):
     if cfg.task != 'analysis':
         for task_name, score_task in scores.items():
             print(
-                f"{task_name} --> precision: {score_task['precision']:.4f}, recall: {score_task['recall']:.4f}, f1: {score_task['f1']:.4f}"
+                f"{task_name} --> precision: {score_task['precision']:.4f}, recall: {score_task['recall']:.4f}, f1: {score_task['f1']:.4f}, Number of correct : {score_task['Number_correct']}, Number of predections : {score_task['Number_Predictions']},"
             )
     else:
         print('eval: | ', end='')

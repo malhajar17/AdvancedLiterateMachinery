@@ -496,11 +496,15 @@ def do_eval_epoch_end(step_outputs):
             "precision": prec_lb,
             "recall": reca_lb,
             "f1": f1_lb,
+            "Number_correct": 0,
+            "Number_Predictions" : 0
         },
         "linking": {
             "precision": prec_lk,
             "recall": reca_lk,
             "f1": f1_lk,
+            "Number_correct" : n_total_correct_rel,
+            "Number_Predictions" : n_total_pred_rel
         }
     }
 
