@@ -2,7 +2,7 @@
 Example:
     python evaluate.py --config=configs/finetune_funsd.yaml
 """
-
+import argparse
 import os
 import torch
 from torch.utils.data.dataloader import DataLoader
@@ -15,9 +15,35 @@ from model import get_model
 from utils import get_class_names, get_config, get_label_map
 
 
-def main():
+def find_index_by_document_id(document_id, directory):
+    # List all files in the specified directory
+    files = os.listdir(directory)
+    # Sort the files for consistent ordering
+    files.sort()
+
+    # Convert document_id to string for comparison
+    document_id_str = str(document_id)
+
+    # Find the file that matches the document_id
+    for idx, filename in enumerate(files):
+        # Remove the file extension and compare
+        filename_without_extension = os.path.splitext(filename)[0]
+        if filename_without_extension == document_id_str:
+            return idx
+    return -1
+
+
+def main(document_id):
     mode = "val"
     cfg = get_config()
+    images_dir = "/workspace/ali_mo_fork/AdvancedLiterateMachinery/DocumentUnderstanding/GeoLayoutLM_one_entry_inerference/dataset/testing_data/images"
+    
+    # Find the index of the document
+    example_idx = find_index_by_document_id(document_id, images_dir)
+    if example_idx == -1:
+        print(f"Document ID {document_id} not found in the dataset.")
+        return
+
     if cfg[mode].dump_dir is not None:
         cfg[mode].dump_dir = os.path.join(cfg[mode].dump_dir, cfg.workspace.strip('/').split('/')[-1])
     else:
@@ -64,7 +90,9 @@ def main():
         net.tokenizer,
         mode=mode,
     )
-    single_data_item = dataset[5]
+
+    # Fetch a single data item
+    single_data_item = dataset[example_idx]
 
     data_loader = DataLoader(
         dataset,
@@ -85,10 +113,7 @@ def main():
         raise ValueError(f"Unknown cfg.config={cfg.config}")
 
     # Define the index of the data item you want to test
-    example_idx = 5  # You can choose any index you want
 
-    # Fetch a single data item
-    single_data_item = dataset[example_idx]
 
     # Manually create a batch by adding a batch dimension with unsqueeze ONLY to tensor objects
     batch = {}
@@ -202,4 +227,11 @@ def visualize_linking(detail_path):
 
 
 if __name__ == "__main__":
-    main()
+
+    parser = argparse.ArgumentParser(description="Evaluate a single document in the dataset")
+    parser.add_argument("--document_id", type=int, help="ID of the document to evaluate")
+    parser.add_argument("--config", type=str, required=True, help="Path to the configuration file")
+    parser.add_argument("--pretrained_model_file", type=str, required=True, help="Path to the pretrained model file")
+
+    args = parser.parse_args()
+    main(args.document_id)
