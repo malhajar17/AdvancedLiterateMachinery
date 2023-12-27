@@ -53,7 +53,7 @@ def _update_config(cfg):
     # set per-gpu batch size
     num_devices = torch.cuda.device_count()
     for mode in ["train", "val"]:
-        new_batch_size = 1
+        new_batch_size = cfg[mode].batch_size // num_devices
         cfg[mode].batch_size = new_batch_size
 
 
