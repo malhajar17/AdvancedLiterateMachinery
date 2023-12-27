@@ -16,7 +16,6 @@ net_*
 *.model
 *.gz
 others
-images
 tmp*.py
 *.dlc
 *.ipynb*
