@@ -36,7 +36,7 @@ def find_index_by_document_id(document_id, directory):
 def main(document_id):
     mode = "val"
     cfg = get_config()
-    images_dir = "/workspace/ali_mo_fork/AdvancedLiterateMachinery/DocumentUnderstanding/GeoLayoutLM_one_entry_inerference/dataset/testing_data/images"
+    images_dir = "/content/AdvancedLiterateMachinery/DocumentUnderstanding/GeoLayoutLM_one_entry_inerference/dataset/testing_data/images"
     
     # Find the index of the document
     example_idx = find_index_by_document_id(document_id, images_dir)
